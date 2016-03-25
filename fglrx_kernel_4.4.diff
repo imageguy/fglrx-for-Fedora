@@ -1,0 +1,45 @@
+--- fglrx-install.8OJ5jZ/common/lib/modules/fglrx/build_mod/firegl_public.c	2015-12-18 11:47:41.000000000 -0700
++++ fglrx-install.qN7CyK/common/lib/modules/fglrx/build_mod/firegl_public.c	2016-03-16 16:57:01.862770818 -0600
+@@ -631,7 +631,7 @@
+ 
+     len = snprintf(buf, request, "%d\n", major);
+ #else
+-    len = seq_printf(m, "%d\n", major);
++    seq_printf(m, "%d\n", major);
+ #endif
+ 
+     KCL_DEBUG1(FN_FIREGL_PROC, "return len=%i\n",len);
+@@ -3424,7 +3424,8 @@
+ int ATI_API_CALL KCL_MEM_MTRR_AddRegionWc(unsigned long base, unsigned long size)
+ {
+ #ifdef CONFIG_MTRR
+-    return mtrr_add(base, size, MTRR_TYPE_WRCOMB, 1);
++    return arch_phys_wc_add(base, size);
++    // return mtrr_add(base, size, MTRR_TYPE_WRCOMB, 1);
+ #else /* !CONFIG_MTRR */
+     return -EPERM;
+ #endif /* !CONFIG_MTRR */
+@@ -3433,7 +3434,9 @@
+ int ATI_API_CALL KCL_MEM_MTRR_DeleteRegion(int reg, unsigned long base, unsigned long size)
+ {
+ #ifdef CONFIG_MTRR
+-    return mtrr_del(reg, base, size);
++    arch_phys_wc_del(reg + 1000);
++    return 0;
++    // return mtrr_del(reg, base, size);
+ #else /* !CONFIG_MTRR */
+     return -EPERM;
+ #endif /* !CONFIG_MTRR */
+@@ -6455,8 +6458,12 @@
+       if (!(fpu->state->xsave.xsave_hdr.xstate_bv & XSTATE_FP))
+ #else
+ 	  copy_xregs_to_kernel(&fpu->state.xsave);
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,4,0)
++      if (!(fpu->state.xsave.header.xfeatures & XFEATURE_MASK_FP))
++#else
+       if (!(fpu->state.xsave.header.xfeatures & XSTATE_FP))
+ #endif
++#endif
+          return 1;
+    } else if (static_cpu_has(X86_FEATURE_FXSR)) {
+ #if LINUX_VERSION_CODE < KERNEL_VERSION(4,2,0)
