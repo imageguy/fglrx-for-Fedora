@@ -10,6 +10,7 @@ The rest of this README summarizes instructions from the excellent directions at
 - fglrx driver does not work  with the Xorg server versions beyond 1.17, so you must downgrade the server to Fedora 22 in the following two steps:
   - sudo dnf downgrade xorg-x11-server-Xorg xorg-x11-server-common –-allowerasing –-releasever=22
   - add the following line to your /etc/yum.repos.d/fedora* files: exclude=xorg-x11-server-Xorg xorg-x11-server-common
+  - if the above doesn't work and you still upgrade the packages, just add the following line to your /etc/dnf/dnf.conf file: exclude=xorg-x11-server-Xorg xorg-x11-server-common
 - download the driver zip from: http://support.amd.com/en-us/download/desktop?os=Linux+x86_64
 - unzip the file to get fglrx-15.302 directory.
 - change to the fglrx-15.302 directory and do: amd-driver-installer-15.302-x86.x86_64.run --extract
