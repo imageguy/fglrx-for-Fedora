@@ -3,7 +3,7 @@ Patch for the AMD fglrx proprietary video driver 15.302 for installing on Fedora
 
 To install the proprietary fglrx driver for various Radeon/ATI/AMD video cards, the source must be patched. The patch has changed for the kernel 4.4.*, so the patch available at https://gist.githubusercontent.com/skarap/8843be76d286fd53835c/raw/a07d3608249bc7d95e3c9c12b4c402ebd2c9f21a/fglrx_kernel_4.3.diff is no longer quite enough. The patch here worked for 4.4.4 and later 4.4.* kernels on my Fedora 23 64 bit machine with a R7 370 card. I run KDE Plasma. I would suspect that the same process would work fine for a 32 bit machine as well, provided you download the 32 bit driver version.
 
-There is a problem using 4.4.5-201 kernel and KDE - swrast fails and KDE won't start. GNOME works, but no very well. See the link below for the way to fix GNOME - I'll add directions once I get it running.
+Applying kernel updates often doesn't require rebuilding fglrx, but if the update changes any prerequisites, fglrx will stop working properly. Such was the case with 4.5.5-201 update, which refreshed mesa (libgl). Uninstall fglrx by going to /usr/share/ati and running, as root, amd-uninstall.sh, then rebuild and reinstall fglrx as described below. Many, many thanks to A.I. who pointed this out when the update broke my machine. 4.5.5-201/KDE now works on my box.
 
 The rest of this README summarizes instructions from the excellent directions at https://bluehatrecord.wordpress.com/2016/03/25/installing-the-proprietary-amd-crimson-driver-on-fedora-23-with-linux-kernel-4-4-6-300 as modified by the discussion on the bottom.
 
@@ -24,5 +24,7 @@ The rest of this README summarizes instructions from the excellent directions at
 - run: ./ati-installer.sh 15.302 --install
 - when you get the install window, select the second option: "Install driver 15.302 on X.Org 6.9 or later 64-bit"
 - accept the defaults and let it install
-- reboot when it asks at the end
+- skip reboot when it asks at the end (no problem if you reboot, it just takes little longer)
+- when it comes back, as root, run: aticonfig --initial
+- reboot
 - you "should" be good to go! But, if you're like me, it will take a week before you get it all figured out!
