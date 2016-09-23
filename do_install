@@ -46,4 +46,4 @@ chmod -R 777 $install_dir
 
 cd $install_dir
 patch -p1 < ../$patchfile
-#./ati-installer.sh 15.302 --install
+./ati-installer.sh 15.302 --install
