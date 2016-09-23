@@ -1,0 +1,49 @@
+#! /bin/sh
+
+# extracts, patches and installs the fglrx. Will select the right patch for
+# the kernel version
+
+# must be run as root
+if [[ `id -u` -ne "0" ]]
+then
+	echo 'must be run as root (do not use sudo)'
+	exit 1
+fi
+
+k_ver=`uname -r`
+
+echo kernel version: $k_ver
+
+if [[ $k_ver < "4.6.4" ]]
+then
+	patchfile=fglrx_kernel_4.4.diff
+elif [[ $k_ver < "4.7.0" ]]
+then
+	patchfile=fglrx_kernel_4.6.diff
+else
+	patchfile=fglrx_kernel_4.7.diff
+fi
+
+if [ -f $patchfile ]
+then
+	echo using patch $patchfile
+else
+	echo missing patch file: $patchfile
+	exit 2
+fi
+
+echo cleaning any old fglrx-install directories
+\rm -rf fglrx-install.*
+
+# extract 
+./amd-driver-installer-15.302-x86.x86_64.run --extract
+install_dir=fglrx-install.*
+
+echo using install directory $install_dir
+
+# so the non-root can work with it
+chmod -R 777 $install_dir
+
+cd $install_dir
+patch -p1 < ../$patchfile
+./ati-installer.sh 15.302 --install
