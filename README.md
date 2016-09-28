@@ -30,7 +30,7 @@ The rest of this README summarizes instructions from the excellent directions at
 - change to the install directory 
 - if your kernel is 4.4.4 or later, but before 4.6.4 patch the code by doing: patch -p1 < ../fglrx_kernel_4.4.diff
 - if your kernel is 4.6.4 or later, patch the code by doing: patch -p1 < ../fglrx_kernel_4.6.diff
-- if your kernel is 4.7.2 or later, patch the code by doing: patch -p1 < ../fglrx_kernel_4.2.diff
+- if your kernel is 4.7.2 or later, patch the code by doing: patch -p1 < ../fglrx_kernel_4.7.diff
 - You are now ready to install the driver. The build and install must be done as root, reportedly "sudo" is not enough. As root, change to the install directory.
 - run: ./ati-installer.sh 15.302 --install
 - when you get the install window, select the second option: "Install driver 15.302 on X.Org 6.9 or later 64-bit"
