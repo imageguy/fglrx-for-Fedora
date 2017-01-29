@@ -1,5 +1,5 @@
 # fglrx-for-Fedora
-Patches for the AMD fglrx proprietary video driver 15.302 for installing on Fedora 23, kernel versions 4.4.* and later
+Patches for the AMD fglrx proprietary video driver 15.302 for installing on Fedora 23 and up, kernel versions 4.4.* and later
 
 In addition to patches, this repository also contains a convenience "do_install" script. Once you have generated your fglrx-15.302 directory and copied all the files from this git repository there, you can run the do_install script which will extract the install, patch the files depending on your kernel level and run the install. The problem is that this must be run as root. I wrote this for my own convenience, but urge you to read and understand the contents - for all you know, through either evil or incompetence, I could be messing up your machine beyond repair. The directions below assume you are doing this by hand.
 
@@ -8,6 +8,8 @@ To install the proprietary fglrx driver for various Radeon/ATI/AMD video cards, 
 The "4.4" patch here worked for 4.4.4 and up to kernel 4.5.7 kernels on my Fedora 23 64 bit machine with a R7 370 card. The "4.6" patch works on my Fedora 24 with 4.6.4-301, but should work on the 4.6.4 on Fedora 23, as the corresponding include files are the same between the two. This patch works on all 4.6.* kernels, but not on the 4.7.* kernels.
 
 The "4.7" patch adds the patch 4.7-arch-cpu_has_pge-v2.patch from 'git clone https://aur.archlinux.org/catalyst.git/' (thanks to A.I. for finding it!) to the "4.6" patch and works at least up to 4.7.4-200 on Fedora 24.
+
+The "4.9" patch updates two function calls that have changed in kernel 4.9.x and was tested on 4.9.4-201.fc25.x86_64 and 4.9.5-200.fc25.x86_64.
 
 I run KDE Plasma. I would suspect that the same process would work fine for a 32 bit machine as well, provided you download the 32 bit driver version.
 
@@ -31,6 +33,7 @@ The rest of this README summarizes instructions from the excellent directions at
 - if your kernel is 4.4.4 or later, but before 4.6.4 patch the code by doing: patch -p1 < ../fglrx_kernel_4.4.diff
 - if your kernel is 4.6.4 or later, patch the code by doing: patch -p1 < ../fglrx_kernel_4.6.diff
 - if your kernel is 4.7.2 or later, patch the code by doing: patch -p1 < ../fglrx_kernel_4.7.diff
+- if your kernel is 4.9 or later, patch the code by doing: patch -p1 < ../fglrx_kernel_4.9.diff
 - You are now ready to install the driver. The build and install must be done as root, reportedly "sudo" is not enough. As root, change to the install directory.
 - run: ./ati-installer.sh 15.302 --install
 - when you get the install window, select the second option: "Install driver 15.302 on X.Org 6.9 or later 64-bit"
