@@ -1,6 +1,5 @@
-diff -uNr unpatched/common/lib/modules/fglrx/build_mod/firegl_public.c patched/common/lib/modules/fglrx/build_mod/firegl_public.c
---- unpatched/common/lib/modules/fglrx/build_mod/firegl_public.c	2015-12-18 10:47:41.000000000 -0800
-+++ patched/common/lib/modules/fglrx/build_mod/firegl_public.c	2017-01-28 15:08:05.799062192 -0800
+--- unpatched/common/lib/modules/fglrx/build_mod/firegl_public.c	2016-09-23 13:25:17.700692800 -0600
++++ patched/common/lib/modules/fglrx/build_mod/firegl_public.c	2017-01-30 11:20:02.086186067 -0700
 @@ -631,7 +631,7 @@
  
      len = snprintf(buf, request, "%d\n", major);
@@ -128,3 +127,21 @@ diff -uNr unpatched/common/lib/modules/fglrx/build_mod/firegl_public.c patched/c
           return 1;
     } else if (static_cpu_has(X86_FEATURE_FXSR)) {
  #if LINUX_VERSION_CODE < KERNEL_VERSION(4,2,0)
+--- unpatched/common/lib/modules/fglrx/build_mod/firegl_public.h	2016-09-23 13:25:25.292624009 -0600
++++ patched/common/lib/modules/fglrx/build_mod/firegl_public.h	2016-09-23 13:25:47.262424939 -0600
+@@ -650,9 +650,15 @@
+ #define cpu_has_pat  test_bit(X86_FEATURE_PAT, (void *) &boot_cpu_data.x86_capability)
+ #endif
+ 
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,7,0)
++#ifndef boot_cpu_has(X86_FEATURE_PGE)
++#define boot_cpu_has(X86_FEATURE_PGE) test_bit(X86_FEATURE_PGE, &boot_cpu_data.x86_capability)
++#endif
++#else
+ #ifndef cpu_has_pge
+ #define cpu_has_pge test_bit(X86_FEATURE_PGE, &boot_cpu_data.x86_capability)
+ #endif
++#endif
+ 
+ /* 2.6.29 defines pgprot_writecombine as a macro which resolves to a
+  * GPL-only function with the same name. So we always use our own
