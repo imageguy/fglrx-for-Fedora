@@ -1,0 +1,147 @@
+--- unpatched/common/lib/modules/fglrx/build_mod/firegl_public.c	2016-09-23 13:25:17.700692800 -0600
++++ patched/common/lib/modules/fglrx/build_mod/firegl_public.c	2017-01-30 11:20:02.086186067 -0700
+@@ -631,7 +631,7 @@
+ 
+     len = snprintf(buf, request, "%d\n", major);
+ #else
+-    len = seq_printf(m, "%d\n", major);
++    seq_printf(m, "%d\n", major);
+ #endif
+ 
+     KCL_DEBUG1(FN_FIREGL_PROC, "return len=%i\n",len);
+@@ -3220,7 +3220,11 @@
+     int ret;
+ 
+     down_read(&current->mm->mmap_sem);
+-    ret = get_user_pages(current, current->mm, vaddr, page_cnt, 1, 0, (struct page **)page_list, NULL);
++    #if LINUX_VERSION_CODE >= KERNEL_VERSION(4,9,0)
++        ret = get_user_pages(vaddr, page_cnt, 1, (struct page **)page_list, NULL);
++    #else
++        ret = get_user_pages(vaddr, page_cnt, 1, 0, (struct page **)page_list, NULL);
++    #endif
+     up_read(&current->mm->mmap_sem);
+ 
+     return ret;
+@@ -3238,7 +3242,11 @@
+     int ret;
+ 
+     down_read(&current->mm->mmap_sem);
+-    ret = get_user_pages(current, current->mm, vaddr, page_cnt, 0, 0, (struct page **)page_list, NULL);
++    #if LINUX_VERSION_CODE >= KERNEL_VERSION(4,9,0)
++        ret = get_user_pages(vaddr, page_cnt, 0, (struct page **)page_list, NULL);
++    #else
++        ret = get_user_pages(vaddr, page_cnt, 0, 0, (struct page **)page_list, NULL);
++    #endif
+     up_read(&current->mm->mmap_sem);
+ 
+     return ret;
+@@ -3249,7 +3257,8 @@
+     unsigned int i;
+     for (i=0; i<page_cnt; i++)
+     {
+-        page_cache_release((struct page*)page_list[i]);
++        put_page((struct page*)page_list[i]);
++        //page_cache_release((struct page*)page_list[i]);
+     }
+ }
+ 
+@@ -3424,7 +3433,8 @@
+ int ATI_API_CALL KCL_MEM_MTRR_AddRegionWc(unsigned long base, unsigned long size)
+ {
+ #ifdef CONFIG_MTRR
+-    return mtrr_add(base, size, MTRR_TYPE_WRCOMB, 1);
++    return arch_phys_wc_add(base, size);
++    // return mtrr_add(base, size, MTRR_TYPE_WRCOMB, 1);
+ #else /* !CONFIG_MTRR */
+     return -EPERM;
+ #endif /* !CONFIG_MTRR */
+@@ -3433,7 +3443,9 @@
+ int ATI_API_CALL KCL_MEM_MTRR_DeleteRegion(int reg, unsigned long base, unsigned long size)
+ {
+ #ifdef CONFIG_MTRR
+-    return mtrr_del(reg, base, size);
++    arch_phys_wc_del(reg + 1000);
++    return 0;
++    // return mtrr_del(reg, base, size);
+ #else /* !CONFIG_MTRR */
+     return -EPERM;
+ #endif /* !CONFIG_MTRR */
+@@ -4518,7 +4530,11 @@
+     write_cr0(cr0);
+     wbinvd();
+ 
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,7,0)
++    if (boot_cpu_has(X86_FEATURE_PGE))
++#else
+     if (cpu_has_pge)
++#endif
+     {
+         cr4 = READ_CR4();
+         WRITE_CR4(cr4 & ~X86_CR4_PGE);
+@@ -4532,7 +4548,11 @@
+     wbinvd();
+     __flush_tlb();
+     write_cr0(cr0 & 0xbfffffff);
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,7,0)
++    if (boot_cpu_has(X86_FEATURE_PGE))
++#else
+     if (cpu_has_pge)
++#endif
+     {
+         WRITE_CR4(cr4);
+     }
+@@ -4559,7 +4579,11 @@
+     write_cr0(cr0);
+     wbinvd();
+ 
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,7,0)
++    if (boot_cpu_has(X86_FEATURE_PGE))
++#else
+     if (cpu_has_pge)
++#endif
+     {
+         cr4 = READ_CR4();
+         WRITE_CR4(cr4 & ~X86_CR4_PGE);
+@@ -4572,7 +4596,11 @@
+     wbinvd();
+     __flush_tlb();
+     write_cr0(cr0 & 0xbfffffff);
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,7,0)
++    if (boot_cpu_has(X86_FEATURE_PGE))
++#else
+     if (cpu_has_pge)
++#endif
+     {
+         WRITE_CR4(cr4);
+     }
+@@ -6455,8 +6483,12 @@
+       if (!(fpu->state->xsave.xsave_hdr.xstate_bv & XSTATE_FP))
+ #else
+ 	  copy_xregs_to_kernel(&fpu->state.xsave);
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,4,0)
++      if (!(fpu->state.xsave.header.xfeatures & XFEATURE_MASK_FP))
++#else
+       if (!(fpu->state.xsave.header.xfeatures & XSTATE_FP))
+ #endif
++#endif
+          return 1;
+    } else if (static_cpu_has(X86_FEATURE_FXSR)) {
+ #if LINUX_VERSION_CODE < KERNEL_VERSION(4,2,0)
+--- unpatched/common/lib/modules/fglrx/build_mod/firegl_public.h	2016-09-23 13:25:25.292624009 -0600
++++ patched/common/lib/modules/fglrx/build_mod/firegl_public.h	2016-09-23 13:25:47.262424939 -0600
+@@ -650,9 +650,15 @@
+ #define cpu_has_pat  test_bit(X86_FEATURE_PAT, (void *) &boot_cpu_data.x86_capability)
+ #endif
+ 
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,7,0)
++#ifndef boot_cpu_has(X86_FEATURE_PGE)
++#define boot_cpu_has(X86_FEATURE_PGE) test_bit(X86_FEATURE_PGE, &boot_cpu_data.x86_capability)
++#endif
++#else
+ #ifndef cpu_has_pge
+ #define cpu_has_pge test_bit(X86_FEATURE_PGE, &boot_cpu_data.x86_capability)
+ #endif
++#endif
+ 
+ /* 2.6.29 defines pgprot_writecombine as a macro which resolves to a
+  * GPL-only function with the same name. So we always use our own
