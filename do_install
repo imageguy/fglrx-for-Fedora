@@ -10,21 +10,34 @@ then
 	exit 1
 fi
 
-k_ver=`uname -r`
+# to avoid using lexical sort on releases, convert to numbers
+function ver2num
+{
+n1=`echo $1 | cut -d '.' -f 1`
+n2=`echo $1 | cut -d '.' -f 2`
+n3=`echo $1 | cut -d '.' -f 3 | sed -e "s/\-.*//"`
+echo $(($n1*10000+$n2*100+$n3))
+}
 
-echo kernel version: $k_ver
+echo kernel version: `uname -r`
 
-if [[ $k_ver < "4.6.4" ]]
+k_ver=$(ver2num "4.10.5-200/gc25.x86_64" )
+#k_ver=$(ver2num `uname -r` )
+
+if [[ $k_ver < $(ver2num "4.6.4") ]]
 then
 	patchfile=fglrx_kernel_4.4.diff
-elif [[ $k_ver < "4.7.0" ]]
+elif [[ $k_ver < $(ver2num "4.7.0") ]]
 then
 	patchfile=fglrx_kernel_4.6.diff
-elif [[ $k_ver < "4.9.0" ]]
+elif [[ $k_ver < $(ver2num "4.9.0") ]]
 then
 	patchfile=fglrx_kernel_4.7.diff
-else
+elif [[ $k_ver < $(ver2num "4.10.0") ]]
+then
 	patchfile=fglrx_kernel_4.9.diff
+else
+	patchfile=fglrx_kernel_4.10.diff
 fi
 
 if [ -f $patchfile ]
