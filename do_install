@@ -21,8 +21,7 @@ echo $(($n1*10000+$n2*100+$n3))
 
 echo kernel version: `uname -r`
 
-k_ver=$(ver2num "4.10.5-200/gc25.x86_64" )
-#k_ver=$(ver2num `uname -r` )
+k_ver=$(ver2num `uname -r` )
 
 if [[ $k_ver < $(ver2num "4.6.4") ]]
 then
