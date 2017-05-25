@@ -51,7 +51,7 @@ echo cleaning any old fglrx-install directories
 \rm -rf fglrx-install.*
 
 # extract 
-./amd-driver-installer-15.302-x86.x86_64.run --extract
+./amd-driver-installer-14.502.1040-x86.x86_64.run --extract
 install_dir=fglrx-install.*
 
 echo using install directory $install_dir
