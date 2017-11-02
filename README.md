@@ -65,3 +65,8 @@ The rest of this README summarizes the excellent instructions from [the communit
 1. You "should" be good to go! But, if you're like me, it will take a week before you get it all figured out!
 
 [installing-the-proprietary-amd-crimson-driver-on-fedora-23-with-linux-kernel-4-4-6-300]: https://bluehatrecord.wordpress.com/2016/03/25/installing-the-proprietary-amd-crimson-driver-on-fedora-23-with-linux-kernel-4-4-6-300/
+
+## License
+
+[MIT](LICENSE.md) © [imageguy](https://github.com/imageguy)
+
