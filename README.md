@@ -18,6 +18,10 @@ The rest of this README summarizes the excellent instructions from [the communit
 ## Instructions
 
 1. You must have the card installed for the driver install to work.
+1. You must have `kernel-devel` package installed
+   ```bash
+   sudo dnf install kernel-devel
+   ```
 1. Copy the `version.h` header file:
 
     ```bash
