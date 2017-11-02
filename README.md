@@ -30,7 +30,7 @@ The rest of this README summarizes the excellent instructions from [the communit
 
 1. `fglrx` driver does not work with the Xorg server versions beyond `1.17`, so you must downgrade the server to Fedora 21 in the following two steps:
     ```bash
-    sudo dnf downgrade –-allowerasing –-releasever=21 xorg-x11-server-Xorg xorg-x11-server-common
+    sudo dnf downgrade --allowerasing --releasever=21 xorg-x11-server-Xorg xorg-x11-server-common
     ```
    1. Original directions had downgrade to F22 and version `1.17`, but F22 was upgraded to `1.18` and people report downgrading to version `1.16` on F21 works fine.
    1. Add the following line to your `/etc/yum.repos.d/fedora*` files: `exclude=xorg-x11-server-Xorg xorg-x11-server-common`
@@ -69,4 +69,3 @@ The rest of this README summarizes the excellent instructions from [the communit
 ## License
 
 [MIT](LICENSE.md) © [imageguy](https://github.com/imageguy)
-
