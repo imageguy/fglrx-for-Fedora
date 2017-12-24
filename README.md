@@ -1,11 +1,11 @@
 # fglrx-for-Fedora
 Patches for the AMD fglrx proprietary video driver **15.302** for installing on **Fedora 23 and up**, kernel versions `4.4.*` and later
 
-The described process and patches in this repository work through at least Fedora Core 26 and kernel `4.11.9-300`.
+**WARNING: After the 4.13 patch, I no longer have the ability to test the patches, since I changed video cards and don't have a machine to run fglrx any more. Check comments under "Patches past 4.13 not tested" issue to see if anybody has tried the patch you want to install. I am happy to continue updating the patches, but if you can test and would like to take over, let me know and I'll share my setup to generate the patches.** 
+
+The described process and patches in this repository work through at least Fedora Core 26 and kernel `4.13`.
 
 In addition to patches, this repository also contains a convenience [`do_install` script](do_install). Once you have generated your `fglrx-15.302` directory and copied all the files from this git repository there, you can run the do_install script which will extract the install, patch the files depending on your kernel level and run the install. The problem is that **this must be run as `root`**. I wrote this for my own convenience, but urge you to read and understand the contents - for all you know, through either evil or incompetence, I could be messing up your machine beyond repair. The directions below assume you are doing this by hand.
-
-I update this README file fairly sporadically, but the patches should be current, since my own machine, a 64 bit system with a `R7 370` card, won't work without a current patch. I run [KDE Plasma](https://www.kde.org/plasma-desktop). I would suspect that the same process would work fine for a 32 bit machine as well, provided you download the 32 bit driver version.
 
 All the patches are cumulative, meaning that **you need only to apply the latest patch**. Check out the patch selection logic in the [`do_install` script](do_install) if you are unsure which patch to install. By and large, if your kernel is `4.x`, then use patch `4.y`, where `y` is the largest available patch number where `y <= x`.
 
