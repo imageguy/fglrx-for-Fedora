@@ -1,5 +1,5 @@
 --- unpatched/common/lib/modules/fglrx/build_mod/firegl_public.c	2017-06-04 13:38:43.621474925 -0600
-+++ patched/common/lib/modules/fglrx/build_mod/firegl_public.c	2017-09-08 10:20:01.383417638 -0600
++++ patched/common/lib/modules/fglrx/build_mod/firegl_public.c	2018-01-13 08:17:23.233914135 -0700
 @@ -203,6 +203,14 @@
  #include <asm/fpu/internal.h>
  #endif
@@ -15,6 +15,15 @@
  
  #include "firegl_public.h"
  #include "kcl_osconfig.h"
+@@ -285,7 +293,7 @@
+ #endif
+ 
+ #ifdef MODULE_LICENSE
+-MODULE_LICENSE("Proprietary. (C) 2002 - ATI Technologies, Starnberg, GERMANY");
++MODULE_LICENSE("GPL");
+ #endif
+ #ifdef MODULE_DEVICE_TABLE
+ MODULE_DEVICE_TABLE(pci, fglrx_pci_table);
 @@ -631,8 +639,13 @@
  
      len = snprintf(buf, request, "%d\n", major);
