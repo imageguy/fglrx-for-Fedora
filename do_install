@@ -47,8 +47,11 @@ then
 elif [[ $k_ver < $(ver2num "4.14.0") ]]
 then
 	patchfile=fglrx_kernel_4.13.diff
-else
+elif [[ $k_ver < $(ver2num "4.15.0") ]]
+then
 	patchfile=fglrx_kernel_4.14.diff
+else
+	patchfile=fglrx_kernel_4.15.diff
 fi
 
 if [ -f $patchfile ]
