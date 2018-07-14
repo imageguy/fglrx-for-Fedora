@@ -50,8 +50,11 @@ then
 elif [[ $k_ver < $(ver2num "4.15.0") ]]
 then
 	patchfile=fglrx_kernel_4.14.diff
-else
+elif [[ $k_ver < $(ver2num "4.17.0") ]]
+then
 	patchfile=fglrx_kernel_4.15.diff
+else
+	patchfile=fglrx_kernel_4.17.diff
 fi
 
 if [ -f $patchfile ]
@@ -62,7 +65,7 @@ else
 	exit 2
 fi
 
-echo cleaning any old fglrx-install directories
+#echo cleaning any old fglrx-install directories
 \rm -rf fglrx-install.*
 
 # extract 
