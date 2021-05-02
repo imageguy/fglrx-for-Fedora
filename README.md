@@ -3,7 +3,7 @@ Patches for the AMD fglrx proprietary video driver **15.302** for installing on 
 
 **WARNING: After the 4.13 patch, I no longer have the ability to test the patches, since I changed video cards and don't have a machine to run fglrx any more. Check comments under "Patches past 4.13 not tested" issue to see if anybody has tried the patch you want to install. I am happy to continue updating the patches, but if you can test and would like to take over, let me know and I'll share my setup to generate the patches.** 
 
-**IMPORTANT NOTE: The last patch I could find was for 5.1. Archlinux, where I used to get the patches, no longer has catalyst (fglrx) section. Unless someone points me to more recent patches, there will be no updates past 5.1.**
+**IMPORTANT NOTE: There is relatively little activity in the development community on this issue and I may not be aware if any new patches become available. If you know of a patch that goes beyond my latest cumulative patch, please let me know.**
 
 The described process and patches in this repository work through at least Fedora Core 26 and kernel `4.13`.
 
